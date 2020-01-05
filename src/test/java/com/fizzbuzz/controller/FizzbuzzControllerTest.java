@@ -44,4 +44,10 @@ public class FizzbuzzControllerTest {
     	assertEquals("Buzz", fizzBuzzList.getFizzBuzzNumberSeries().get(54));
     	assertEquals("FizzBuzz", fizzBuzzList.getFizzBuzzNumberSeries().get(44));
     }
+    
+    @Test
+    public void testWhenUpperLimitIsInvalid() throws Exception {
+    	ResponseEntity<String> responseEntity =  this.restTemplate.getForEntity("http://localhost:" + port + "/fizzbuzz/"+-1, String.class);
+    	assertEquals(500, responseEntity.getStatusCodeValue());
+    }
 }

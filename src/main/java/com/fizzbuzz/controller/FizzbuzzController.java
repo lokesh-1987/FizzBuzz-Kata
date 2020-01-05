@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fizzbuzz.exception.InvalidNumberException;
 import com.fizzbuzz.model.FizzBuzz;
 import com.fizzbuzz.utils.FizbuzzRules;
 
@@ -24,9 +23,12 @@ public class FizzbuzzController {
 	
 
     @RequestMapping(value = "/fizzbuzz/{upperLimit}", method = RequestMethod.GET, produces = "application/json")
-    public String getFizzBuzz(@PathVariable("upperLimit") int upperLimit, HttpServletResponse response) {
+    public String getFizzBuzz(@PathVariable("upperLimit") int upperLimit) {
+    	
+    	if(upperLimit < 1)
+    		throw new InvalidNumberException("Number upper limit is invalid!!!");
 
-        FizzBuzz fizzBuzzObj = new FizzBuzz();
+    	FizzBuzz fizzBuzzObj = new FizzBuzz();
         
         List<Integer> fizzList = new ArrayList<>(),
                       buzzList = new ArrayList<>(), 
@@ -61,9 +63,7 @@ public class FizzbuzzController {
             fizzBuzzObj.setFizzBuzzNumberSeries(fizzbuzzNumberList);
             return objectMapper.writeValueAsString(fizzBuzzObj);
         } catch (JsonProcessingException e) {
-        	
+        	throw new RuntimeException();
         }
-
-        return null;
     }
 }
